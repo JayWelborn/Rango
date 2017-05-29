@@ -1,0 +1,36 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+*$py.class
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Django stuff:
+*.log
+private_settings.py
+migrations
+
+# pyenv
+.python-version
+
+# dotenv
+.env
+
+# virtualenv
+.venv/
+venv/
+ENV/
+rangoenv/
+
+# IDE stuff
+.idea
+
+# blog entry test
+new-entry.html
+new-entry.css
+reference.html
+
+# local media files
+rango/rango/media/
