@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+
+{% load static %}
+
+<html>
+    <head>
+        <title>About Rango</title>
+    </head>
+
+    <body>
+        <h1>Site put together by</h1>
+        <div>
+            <strong>
+                {{ name }}
+            </strong>
+            <br/>
+        </div>
+        <div>
+            <a href="/rango/">Home</a>
+            <br/>
+        </div>
+        <img src="{% static 'images/fonts.png' %}" 
+             alt="Chris Do Font Recommendations"
+             style="width:75%; margin-left:auto; margin-right:auto;">
+             <img src="{{ MEDIA_URL }}sheet music.jpeg" 
+             alt="Chris Do Font Recommendations"
+             style="width:75%; margin-left:auto; margin-right:auto;">
+    </body>
+</html>

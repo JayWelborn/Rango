@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+
+{% load static %}
+
+<html>
+    <head>
+        <title>Rango</title>
+    </head>
+
+    <body>
+        <h1>Rango says...</h1>
+        <img src="{% static 'images/fonts.png' %}" 
+             alt="Chris Do Font Recommendations"
+             style="width:75%; margin-left:auto; margin-right:auto;">
+        <div>
+            hey there partner!
+            <br/>
+            <strong>
+                {{ boldmessage }}
+            </strong>
+            <br/>
+        </div>
+        <div>
+            <a href="/rango/about">About</a>
+            <br/>
+        </div>
+    </body>
+</html>
