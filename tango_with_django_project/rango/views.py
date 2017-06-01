@@ -33,7 +33,7 @@ def show_category(request, category_name_slug):
         # retrieve category with the given slug
         category = Category.objects.get(slug=category_name_slug)
         # retrieve pages matching the given category
-        pages = Pages.objects.filter(category=category)
+        pages = Page.objects.filter(category=category)
         # load context dictionary
         context_dict['pages'] = pages
         context_dict['category'] = category

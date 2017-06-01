@@ -24,11 +24,11 @@ def populate():
         },
         {
             "title": "How to Thing Like a Computer Scientist", 
-            "url": "https://www.greenteapress.com/thinkpython"
+            "url": "http://www.greenteapress.com/thinkpython"
         },  
         {
             "title": "Learn Python in 10 Minutes",
-            "url": "http://www.korokithakis.net/tutorials/python/"
+            "url": "https://www.stavros.io/tutorials/python/"
         },
     ]
 
@@ -39,7 +39,7 @@ def populate():
         },
         {
             "title": "Django Rocks",
-            "url": "http://www/djangorocks.com/"
+            "url": "http://www.djangorocks.com/"
         },
         {
             "title": "How to Tango with Django",
