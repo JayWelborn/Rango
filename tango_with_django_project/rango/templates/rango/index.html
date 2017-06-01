@@ -9,20 +9,30 @@
 
     <body>
         <h1>Rango says...</h1>
-        <img src="{% static 'images/fonts.png' %}" 
-             alt="Chris Do Font Recommendations"
-             style="width:75%; margin-left:auto; margin-right:auto;">
+
         <div>
             hey there partner!
-            <br/>
-            <strong>
-                {{ boldmessage }}
-            </strong>
-            <br/>
         </div>
+
+        <div>
+            {% if categories %}
+            <ul>
+                {% for category in categories %}
+                <li>{{ category.name }}</li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <strong>No Categories to Display</strong>
+            {% endif %}
+        </div>
+
         <div>
             <a href="/rango/about">About</a>
             <br/>
         </div>
+
+        <img src="{% static 'images/rango.jpg' %}" 
+             alt="Chris Do Font Recommendations"
+             style="width:75%; margin-left:auto; margin-right:auto;">
     </body>
 </html>
