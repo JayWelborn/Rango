@@ -1,29 +1,23 @@
-<!DOCTYPE html>
-
+{% extends 'base.html' %}
 {% load static %}
+{% block body_block %}
 
-<html>
-    <head>
-        <title>About Rango</title>
-    </head>
-
-    <body>
-        <h1>This tutorial has been put together by</h1>
-        <div>
-            <strong>
-                {{ name }}
-            </strong>
-            <br/>
-        </div>
-        <div>
-            <a href="{% url 'index' %}">Home</a>
-            <br/>
-        </div>
-        <img src="{% static 'images/fonts.png' %}" 
-             alt="Chris Do Font Recommendations"
-             style="width:75%; margin-left:auto; margin-right:auto;">
-             <img src="{{ MEDIA_URL }}sheet music.jpeg" 
-             alt="Chris Do Font Recommendations"
-             style="width:75%; margin-left:auto; margin-right:auto;">
-    </body>
-</html>
+<h1>This tutorial has been put together by</h1>
+<div>
+    <strong>
+        {{ name }}
+    </strong>
+    <br/>
+</div>
+<div>
+    <a href="{% url 'rango:index' %}">Home</a>
+    <br/>
+</div>
+<img src="{% static 'images/fonts.png' %}" 
+     alt="Chris Do Font Recommendations"
+     style="width:75%; margin-left:auto; margin-right:auto;">
+     <img src="{{ MEDIA_URL }}sheet music.jpeg" 
+     alt="Chris Do Font Recommendations"
+     style="width:75%; margin-left:auto; margin-right:auto;">
+     
+{% endblock %}
