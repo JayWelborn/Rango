@@ -2,10 +2,31 @@
 <html>
     <head lang="en">
         <meta charset="UTF-8">
-        <title>Rango</title>
+        <title>
+            Rango - 
+            {% block title_block %}
+            How To Tango with Django
+            {% endblock %}
+        </title>
     </head>
     <body>
-        {% block body_block %}
-        {% endblock %}
+        <div>
+            {% block body_block %}
+            {% endblock %}
+        </div>
+        <hr>
+        <div>
+            <ul>
+                <li>
+                    <a href="{% url 'rango:add_category' %}">Add New Category</a>
+                </li>
+                <li>
+                    <a href="{% url 'rango:about' %}">About</a>
+                </li>
+                <li>
+                    <a href="{% url 'rango:index' %}">Home</a>
+                </li>
+            </ul>
+        </div>
     </body>
 </html>

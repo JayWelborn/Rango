@@ -1,5 +1,10 @@
 {% extends 'base.html' %}
 {% load static %}
+
+{% block title_block %}
+Home
+{% endblock %}
+
 {% block body_block %}
 
 <h1>Rango says...</h1>
@@ -35,13 +40,6 @@
     {% else %}
     <strong>No Pages to Display</strong>
     {% endif %}
-</div>
-
-<div>
-    <a href="{% url 'rango:about' %}">About</a>
-    <br/>
-    <a href="{% url 'rango:add_category' %}">Add Category</a>
-    <br/>
 </div>
 
 <img src="{% static 'images/rango.jpg' %}" 

@@ -1,5 +1,10 @@
 {% extends 'base.html' %}
 {% load static %}
+
+{% block title_block %}
+{{ category.name }}
+{% endblock %}
+
 {% block body_block %}
 
 <div>
@@ -18,8 +23,7 @@
         <strong>The specified category does not exist!</strong>
     {% endif %}
 </div>
-<a href="/">Home</a>
-<br>
-<a href="{% url 'add_page' category.slug %}">Add Page</a>
+
+<a href="{% url 'rango:add_page' category.slug %}">Add Page</a>
 
 {% endblock %}
