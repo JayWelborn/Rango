@@ -215,7 +215,7 @@ def user_login(request):
         if user:
             # ensure account hasn't been disabled
             if user.is_active:
-                login(request, user)
+                login(request, user=user)
                 return HttpResponseRedirect(reverse('index'))
             else:
                 # stop inactive accounts from logging in
