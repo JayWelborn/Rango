@@ -51,7 +51,8 @@ class UserProfile(models.Model):
     """
     Class for new users. Users will have permission to create
     page and category objects.
-    user - reference to user object
+    user - reference to user object 
+        (https://docs.djangoproject.com/en/1.11/ref/contrib/auth/#django.contrib.auth.models.User)
     website - allows url of user's personal website
     picture - user's profile picture
     """
