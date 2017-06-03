@@ -1,5 +1,7 @@
+from django.contrib.auth import authenticate, login
+from django.core.urlresolvers import reverse
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 
 from .models import Category, Page, UserProfile
 from .forms import CategoryForm, PageForm, UserForm, UserProfileForm
@@ -141,7 +143,7 @@ def register(request):
     if request.method == 'POST':
         # attempt to get data from raw info
         user_form = UserForm(data=request.POST)
-        profile_form = UserProfile(data=request.POST)
+        profile_form = UserProfileForm(data=request.POST)
 
         # only creates new user if both forms are valid
         if user_form.is_valid() and profile_form.is_valid():
@@ -192,3 +194,38 @@ def register(request):
                 'registered': registered
             }
         )
+
+
+def user_login(request):
+    """
+    Login page.
+    Displays form on GET
+    Validates credentials on POST
+    """
+
+    if request.method == 'POST':
+        # Get info from POST data
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        # django's built in authentication returns a User object if data is valid
+        user = authenticate(username=username, password=password)
+
+        # if user exists, the credentials were valid
+        if user:
+            # ensure account hasn't been disabled
+            if user.is_active:
+                login(request, user)
+                return HttpResponseRedirect(reverse('index'))
+            else:
+                # stop inactive accounts from logging in
+                return HttpResponse("Your Rango account is disabled")
+
+        # bad login credentials presented
+        else:
+            print("Invalid login details: {0}, {1}".format(username, password))
+            return HttpResponse("Invalid login details supplied")
+
+    # method isn't POST, so display login form
+    else:
+        return render(request, 'rango/login.html', {})

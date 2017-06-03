@@ -64,4 +64,4 @@ class UserProfile(models.Model):
 
     def __str__(self):
         # returns username from User model
-        return self.username
+        return self.user.username
