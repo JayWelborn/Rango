@@ -1,4 +1,5 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
@@ -66,6 +67,7 @@ def show_category(request, category_name_slug):
     return render(request, 'rango/category.html', context_dict)
 
 
+@login_required
 def add_category(request):
     """
     View for allowing users to add categories.
@@ -92,6 +94,7 @@ def add_category(request):
     return render(request, 'rango/add_category.html/', {'form': form})
 
 
+@login_required
 def add_page(request, category_name_slug):
     """
     View for allong users to add pages.
@@ -224,8 +227,21 @@ def user_login(request):
         # bad login credentials presented
         else:
             print("Invalid login details: {0}, {1}".format(username, password))
-            return HttpResponse("Invalid login details supplied")
+            context_dict = {'error_message': 'Your login credentials are incorrect.'}
+            return render(request, 'rango/login.html', context_dict)
 
     # method isn't POST, so display login form
     else:
         return render(request, 'rango/login.html', {})
+
+
+@login_required
+def restricted(request):
+    return render(request, 'rango/restricted.html', {})
+
+
+@login_required
+def user_logout(request):
+    logout(request)
+    # take user back to home page after logging out
+    return HttpResponseRedirect(reverse('index'))

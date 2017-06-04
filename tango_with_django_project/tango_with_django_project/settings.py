@@ -119,6 +119,10 @@ PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
 ]
 
+# Login Redirect URL
+# https://docs.djangoproject.com/en/1.11/ref/settings/#login-url
+
+LOGIN_URL = '/rango/login/'
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/

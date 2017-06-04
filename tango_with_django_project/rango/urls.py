@@ -6,6 +6,8 @@ app_name = 'rango'
 
 urlpatterns = [
 
+    url(r'^$', views.index, name='index'),
+
     url(r'^about/$', 
         views.about, 
         name='about'),
@@ -30,5 +32,11 @@ urlpatterns = [
         views.user_login,
         name='login'),
 
-    url(r'^$', views.index, name='index'),
+    url(r'^logout/$',
+        views.user_logout,
+        name='logout'),
+
+    url(r'^restricted/$',
+        views.restricted,
+        name='restricted'),
 ]

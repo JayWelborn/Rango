@@ -7,6 +7,10 @@
 
 {% block body_block %}
 <h1>Login to Rango</h1>
+{% if error_message %}
+    <h3>{{ error_message }}</h3>
+{% endif %}
+
 <form id="login_form" method="post" action="{% url 'rango:login' %}">
     {% csrf_token %}
     Username: <input type="text" name="username" value="" size="50">
