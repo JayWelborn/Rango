@@ -23,6 +23,10 @@ from rango import views
 urlpatterns = [
     url(r'^rango/', include('rango.urls')),
     url(r'^admin/', admin.site.urls),
+    url(r'^accounts/register/$',
+        views.MyRegistrationView.as_view(),
+        name = 'registration_register'),
+    url(r'^accounts/', include('registration.backends.simple.urls')),
     url(r'^$', views.index, name='index')
 ]
 

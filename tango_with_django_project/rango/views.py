@@ -1,11 +1,52 @@
+from datetime import datetime
+
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 
+from registration.backends.simple.views import RegistrationView
+
 from .models import Category, Page, UserProfile
 from .forms import CategoryForm, PageForm, UserForm, UserProfileForm
+
+
+def get_server_side_cookie(request, cookie, default_val=None):
+    val = request.session.get(cookie)
+    if not val:
+        val = default_val
+    return val
+
+
+def visitor_cookie_handler(request):
+    """
+    Get the number of visits to the site.
+    We use Cookies.get() to obtain the visits cookie.
+    If the cookie exists, the value returned is cast to an integer.
+    If the cookie doesn't exit, then the value is set to 1.
+    """
+    visits = int(get_server_side_cookie(request, 'visits', '1'))
+
+    last_visit_cookie = get_server_side_cookie(request, 
+                                               'last_visit', 
+                                               str(datetime.now()))
+
+    last_visit_time = datetime.strptime(last_visit_cookie[:-7], 
+                                        '%Y-%m-%d %H:%M:%S')
+
+    # If it's been more than a day since the last visit
+    if (datetime.now() - last_visit_time).days > 0:
+        visits += 1
+        # Update last visit cookie
+        request.session['last_visit'] = str(datetime.now())
+    else:
+        visits = 1
+        # Set the last visit cookie
+        request.session['last_visit'] = last_visit_cookie
+
+    # Update/set visits cookie after creating or incrementing
+    request.session['visits'] = visits
 
 
 def index(request):
@@ -15,13 +56,24 @@ def index(request):
     the top five most viewed pages.
     """
 
+    request.session.set_test_cookie()
     category_list = Category.objects.order_by('-likes')[:5]
     pages_list = Page.objects.order_by('-views')[:5]
+
+    # Handle cookies and session data
+    visitor_cookie_handler(request)
+
     context_dict = {
         'categories': category_list,
-        'pages': pages_list
+        'pages': pages_list,
+        'visits': request.session['visits'],
     }
-    return render(request, 'rango/index.html', context=context_dict)
+
+    # Obtain response
+    response = render(request, 'rango/index.html', context=context_dict)
+
+    # Send response to user
+    return response
 
 
 def about(request):
@@ -30,8 +82,16 @@ def about(request):
     Renders template with 'name' for demonstration purposes
     """
 
+    if request.session.test_cookie_worked():
+        print("TEST COOKIE WORKED!")
+        request.session.delete_test_cookie()
+
+    # Handle cookies and session data
+    visitor_cookie_handler(request)
+
     context_dict = {
-        'name': "Jay Welborn"
+        'name': "Jay Welborn",
+        'visits': request.session['visits'],
     }
     return render (request, 'rango/about.html', context=context_dict)
 
@@ -211,7 +271,7 @@ def user_login(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
 
-        # django's built in authentication returns a User object if data is valid
+        # django's built in auth returns a User object if data is valid
         user = authenticate(username=username, password=password)
 
         # if user exists, the credentials were valid
@@ -227,7 +287,7 @@ def user_login(request):
         # bad login credentials presented
         else:
             print("Invalid login details: {0}, {1}".format(username, password))
-            context_dict = {'error_message': 'Your login credentials are incorrect.'}
+            context_dict = {'error_message': 'Incorrect login credentials.'}
             return render(request, 'rango/login.html', context_dict)
 
     # method isn't POST, so display login form
@@ -245,3 +305,11 @@ def user_logout(request):
     logout(request)
     # take user back to home page after logging out
     return HttpResponseRedirect(reverse('index'))
+
+
+class MyRegistrationView(RegistrationView):
+    """
+    Redirect users to index page upon successful login
+    """
+    def get_success_url(self, user):
+        return '/rango/'

@@ -37,13 +37,16 @@ ALLOWED_HOSTS = [
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
+    'django.contrib.sites',
+    'registration',
+    'django.contrib.admin', # has to be below 'registration'
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rango'
+    'rango',
+
 ]
 
 MIDDLEWARE = [
@@ -146,3 +149,19 @@ STATIC_URL = '/static/'
 # Media files (user-updloaded photos, audio, etc.)
 
 MEDIA_URL = '/media/'
+
+# Registration Settings
+# https://django-registration-redux.readthedocs.io/en/latest/quickstart.html
+
+# Registration depends on sites
+SITE_ID = 1
+# How users have to activate after getting an email
+ACCOUNT_ACTIVATION_DAYS = 7
+# Logs users in upon successful registration
+REGISTRATION_AUTO_LOGIN = True
+# Users are allowed to register
+REGISTRATION_OPEN = True
+# Where users are directed upon successful login
+LOGIN_REDIRECT_URL = '/rango/'
+# Where users go to login
+LOGIN_URL = '/accounts/login/'
