@@ -39,14 +39,14 @@ ALLOWED_HOSTS = [
 INSTALLED_APPS = [
     'django.contrib.sites',
     'registration',
-    'django.contrib.admin', # has to be below 'registration'
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rango',
-
+    'crispy_forms',
+    'django.contrib.admin', # has to be below 'registration'
 ]
 
 MIDDLEWARE = [
@@ -165,3 +165,8 @@ REGISTRATION_OPEN = True
 LOGIN_REDIRECT_URL = '/rango/'
 # Where users go to login
 LOGIN_URL = '/accounts/login/'
+
+# Django Crispy Forms Settings
+# http://django-crispy-forms.readthedocs.io/en/latest/
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'

@@ -1,10 +1,22 @@
 from django import forms
 from django.contrib.auth.models import User
 
+from crispy_forms.helper import FormHelper
+
 from .models import Category, Page, UserProfile
 
 
-class CategoryForm (forms.ModelForm):
+class CrispyForm (forms.ModelForm):
+    """
+    SubClass for adding FormHelper from crispy_forms
+    http://django-crispy-forms.readthedocs.io/en/latest/crispy_tag_forms.html
+    """
+    def __init__(self, *args, **kwargs):
+        super(CrispyForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+
+
+class CategoryForm (CrispyForm):
     """
     Form for letting users create a new category
     name - name of category
@@ -22,7 +34,7 @@ class CategoryForm (forms.ModelForm):
         fields = ('name',)
 
 
-class PageForm(forms.ModelForm):
+class PageForm(CrispyForm):
     """
     Form for letting users create a new page
     title - title of page
@@ -49,7 +61,7 @@ class PageForm(forms.ModelForm):
             return cleaned_data
 
 
-class UserForm(forms.ModelForm):
+class UserForm(CrispyForm):
     """
     Form for creating a new user
     password - password (duh)
@@ -65,7 +77,7 @@ class UserForm(forms.ModelForm):
         fields = ('username', 'email', 'password')
 
 
-class UserProfileForm(forms.ModelForm):
+class UserProfileForm(CrispyForm):
     """
     Form for creating UserProfile (see rango.models)
     adds fields for:
