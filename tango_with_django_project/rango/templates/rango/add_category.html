@@ -10,7 +10,11 @@ Add a Category
 <h1>Add a Category</h1>
 
 <div>
-    <form id="category_form" method="post" action="{% url 'rango:add_category' %}">
+    <form role="form" id="page_form" method="post" 
+          action="{% url 'rango:add_category' %}">
+        <h2 class="form-signin-heading">
+            Add a new category 
+        </h2>
         {% csrf_token %}
         
         {% for hidden in form.hidden_fields %}
@@ -19,10 +23,10 @@ Add a Category
 
         {% for field in form.visible_fields %}
             {{ field.errors }}
-            {{ field.help_text }}
-            {{ field }}
+            {{ field.help_text }} <br>
+            {{ field }} <br>
         {% endfor %}
-
+        <br>
         <input type="submit" name="submit" value="Create Category">
     </form>
 </div>
