@@ -169,4 +169,4 @@ LOGIN_URL = '/accounts/login/'
 # Django Crispy Forms Settings
 # http://django-crispy-forms.readthedocs.io/en/latest/
 
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
+CRISPY_TEMPLATE_PACK = 'bootstrap3'

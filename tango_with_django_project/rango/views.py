@@ -5,11 +5,10 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-
-from registration.backends.simple.views import RegistrationView
+from django.views import generic
 
 from .models import Category, Page, UserProfile
-from .forms import CategoryForm, PageForm, UserForm, UserProfileForm
+from .forms import CategoryForm, PageForm, RegistrationCrispyForm
 
 
 def get_server_side_cookie(request, cookie, default_val=None):
@@ -307,9 +306,21 @@ def user_logout(request):
     return HttpResponseRedirect(reverse('index'))
 
 
-class MyRegistrationView(RegistrationView):
+class MyRegistrationView(generic.FormView):
     """
     Redirect users to index page upon successful login
     """
-    def get_success_url(self, user):
-        return '/rango/'
+    template_name = 'registration/registration_form.html'
+    form_class = RegistrationCrispyForm
+    success_url = '/rango'
+
+    def form_valid(self, form):
+        """
+        saves form, returns HttpResponse
+        """
+        form = form.save()
+        username = form.cleaned_data['username']
+        password = form.cleaned_data['password']
+        new_user = authenticate(username=username, password=password)
+        login(self.request, new_user)
+        return super(MyRegistrationView, self).form_valid(form)

@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% load crispy_forms_tags %}
+
 {% block title_block %}
 Add a Category
 {% endblock %}
@@ -10,25 +12,7 @@ Add a Category
 <h1>Add a Category</h1>
 
 <div>
-    <form role="form" id="page_form" method="post" 
-          action="{% url 'rango:add_category' %}">
-        <h2 class="form-signin-heading">
-            Add a new category 
-        </h2>
-        {% csrf_token %}
-        
-        {% for hidden in form.hidden_fields %}
-            {{ hidden }}
-        {% endfor %}
-
-        {% for field in form.visible_fields %}
-            {{ field.errors }}
-            {{ field.help_text }} <br>
-            {{ field }} <br>
-        {% endfor %}
-        <br>
-        <input type="submit" name="submit" value="Create Category">
-    </form>
+    {% crispy form form.helper %}
 </div>
 
 {% endblock %}

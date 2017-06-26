@@ -2,6 +2,9 @@ from django import forms
 from django.contrib.auth.models import User
 
 from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Submit
+
+from registration.forms import RegistrationForm
 
 from .models import Category, Page, UserProfile
 
@@ -33,6 +36,13 @@ class CategoryForm (CrispyForm):
         model = Category
         fields = ('name',)
 
+    def __init__(self, *args, **kwargs):
+        super(CategoryForm, self).__init__(*args, **kwargs)
+        self.helper.form_id = 'category_form'
+        self.helper.form_method = 'post'
+        self.helper.form_action = '/rango/add_category/'
+        self.helper.add_input(Submit('submit', 'Add Category'))
+
 
 class PageForm(CrispyForm):
     """
@@ -60,6 +70,13 @@ class PageForm(CrispyForm):
 
             return cleaned_data
 
+    def __init__(self, *args, **kwargs):
+        super(PageForm, self).__init__(*args, **kwargs)
+        self.helper.form_id = 'page_form'
+        self.helper.form_method = 'post'
+        self.helper.form_action = '.'
+        self.helper.add_input(Submit('submit', 'Add Page'))
+
 
 class UserForm(CrispyForm):
     """
@@ -76,6 +93,12 @@ class UserForm(CrispyForm):
         model = User
         fields = ('username', 'email', 'password')
 
+    def __init__(self, *args, **kwargs):
+        super(UserForm, self).__init__(*args, **kwargs)
+        self.helper.form_id = 'user_form'
+        self.helper.form_method = 'post'
+        self.helper.form_action = '.'
+
 
 class UserProfileForm(CrispyForm):
     """
@@ -88,3 +111,67 @@ class UserProfileForm(CrispyForm):
     class Meta:
         model = UserProfile
         fields = ('website', 'picture')
+
+    def __init__(self, *args, **kwargs):
+        super(UserProfileForm, self).__init__(*args, **kwargs)
+        self.helper.form_id = 'user_profile_form'
+        self.helper.form_method = 'post'
+        self.helper.form_action = '.'
+        self.helper.add_input(Submit('submit', 'Register'))
+
+
+class RegistrationCrispyForm(CrispyForm):
+    """
+    Allows user to register for a new account.
+    Saves 'username', 'email', 'password', to User model
+    Saves 'website', 'picture' to UserProfile model
+    Assigns User model to UserProfile via OnetoOne field
+    """
+
+    password = forms.CharField(widget=forms.PasswordInput())
+    confirm_password = forms.CharField(widget=forms.PasswordInput())
+    website = forms.URLField(required=False)
+    picture = forms.ImageField(required=False)
+    
+
+    class Meta:
+        model = User
+        fields = ('username', 'email')
+
+    def __init__(self, *args, **kwargs):
+        super(RegistrationCrispyForm, self).__init__(*args, **kwargs)
+        self.helper.form_id = 'registration_form'
+        self.helper.form_method = 'post'
+        self.helper.form_action = '.'
+        self.helper.add_input(Submit('submit', 'Register'))
+
+    def save(self):
+        """
+        Creates and saves new User object with username, password, and email.
+        Creates and saves new UserProfile object with website and picture
+        """
+        user = User.objects.create(
+                username=self.cleaned_data['username'],
+                email=self.cleaned_data['email'],
+            )
+
+        password = self.cleaned_data['password']
+        password_confirmation = self.cleaned_data['confirm_password']
+
+        if password and password_confirmation and password==password_confirmation:
+            user.set_password(self.cleaned_data['password'])
+            user.save()
+
+        website = self.cleaned_data['website']
+        picture = self.cleaned_data['picture']
+        profile = UserProfile.objects.create(user=user)
+
+        if website:
+            profile.website = website
+
+        if picture:
+            profile.picture = picture
+
+        profile.save()
+        return self
+
