@@ -316,7 +316,7 @@ class MyRegistrationView(generic.FormView):
 
     def form_valid(self, form):
         """
-        saves form, returns HttpResponse
+        saves form, logs new user in, and returns HttpResponse
         """
         form = form.save()
         username = form.cleaned_data['username']

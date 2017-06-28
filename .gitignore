@@ -34,3 +34,6 @@ reference.html
 
 # local media files
 */media/
+
+# app API keys
+*.key
