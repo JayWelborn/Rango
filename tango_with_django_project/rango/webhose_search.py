@@ -1,7 +1,10 @@
 import json
+import os
 import urllib.parse
 import urllib.request
 from sys import argv
+
+from django.conf import settings
 
 def read_webhose_key():
     """
@@ -11,11 +14,19 @@ def read_webhose_key():
     """
 
     webhose_api_key = None
-    try:
-        with open('search.key', 'r') as f:
-            webhose_api_key = f.readline().strip()
-    except:
-        raise IOError('search.key not found')
+    if settings:
+        try:
+            with open(os.path.join(settings.BASE_DIR, 'search.key'), 'r') as f:
+                webhose_api_key = f.readline().strip()
+        except:
+            raise IOError('settings loaded, search.key not found')
+    
+    else:
+        try:
+            with open('search.key', 'r') as f:
+                webhose_api_key = f.readline().strip()
+        except:
+            raise IOError('search.key not found')
 
     return webhose_api_key
 
@@ -76,7 +87,15 @@ def main():
     """
     run query with command line arguments for testing
     """
-    results = run_query(search_terms='Donald Trump', size=10)
+    terms = 'example'
+    size=10
+    
+    try:
+        terms = argv[1]
+        size = argv[2]
+    except:
+        pass
+    results = run_query(search_terms=terms, size=size)
     
     for result in results:
         print('Title = ' + result['title'] + '\n')

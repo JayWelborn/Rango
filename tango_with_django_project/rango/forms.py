@@ -2,7 +2,8 @@ from django import forms
 from django.contrib.auth.models import User
 
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit
+from crispy_forms.layout import Submit, Layout
+from crispy_forms.bootstrap import FieldWithButtons, StrictButton
 
 from registration.forms import RegistrationForm
 
@@ -175,3 +176,21 @@ class RegistrationCrispyForm(CrispyForm):
         profile.save()
         return self
 
+class SearchForm(forms.Form):
+
+    query = forms.CharField(
+        help_text='Find Pages to add to Rango',
+        label='',
+        required=False)
+
+    def __init__(self, *args, **kwargs):
+        super(SearchForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_id = 'search'
+        self.helper.form_class = 'form-inline'
+        self.helper.form_method = 'post'
+        self.helper.form_action = '.'
+        self.helper.layout = Layout (
+            FieldWithButtons(
+                'query', 
+                StrictButton('Search', type='submit')))

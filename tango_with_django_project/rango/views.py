@@ -8,7 +8,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.views import generic
 
 from .models import Category, Page, UserProfile
-from .forms import CategoryForm, PageForm, RegistrationCrispyForm
+from .forms import CategoryForm, PageForm, RegistrationCrispyForm, SearchForm
+from .webhose_search import run_query
 
 
 def get_server_side_cookie(request, cookie, default_val=None):
@@ -189,111 +190,6 @@ def add_page(request, category_name_slug):
     return render(request, 'rango/add_page.html', context_dict)
 
 
-def register(request):
-    """
-    Will allow users to register for a new account.
-    'register' is a boolean value for whether or not
-    a user is registered. Defaults to false so that 
-    the page will render the normal form. When true
-    the page will create the UserProfile object and
-    log the user in.
-    """
-
-    registered = False
-
-    # Process form data if HTTP method is POST
-    if request.method == 'POST':
-        # attempt to get data from raw info
-        user_form = UserForm(data=request.POST)
-        profile_form = UserProfileForm(data=request.POST)
-
-        # only creates new user if both forms are valid
-        if user_form.is_valid() and profile_form.is_valid():
-            # save info to database
-            user=user_form.save()
-
-            # hash password then update user object
-            user.set_password(user.password)
-            user.save()
-
-            # add info for UserProfile portion.
-            # waits to commit info to database until after user
-            # instance is set to avoid null error
-            profile = profile_form.save(commit=False)
-            profile.user = user
-
-            # if user provided a profile picture
-            # get it from input form and
-            # put it in UserProfile model
-            if 'picture' in request.FILES:
-                profile.picture = request.FILES['picture']
-
-            # NOW save model to database
-            profile.save()
-
-            # Update registered variable to True
-            # to indicate registration was successful
-            registered = True
-
-        else:
-            # in case of invalid forms
-            # print errors to console
-            print(user_form.errors, profile_form.errors)
-
-    # if NOT HTTP POST
-    else:
-        # set form variables to blank instances of Form classes
-        user_form = UserForm()
-        profile_form = UserProfileForm()
-
-    # render request depending on context
-    return render(
-            request,
-            'rango/register.html',
-            {
-                'user_form': user_form,
-                'profile_form': profile_form,
-                'registered': registered
-            }
-        )
-
-
-def user_login(request):
-    """
-    Login page.
-    Displays form on GET
-    Validates credentials on POST
-    """
-
-    if request.method == 'POST':
-        # Get info from POST data
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-
-        # django's built in auth returns a User object if data is valid
-        user = authenticate(username=username, password=password)
-
-        # if user exists, the credentials were valid
-        if user:
-            # ensure account hasn't been disabled
-            if user.is_active:
-                login(request, user=user)
-                return HttpResponseRedirect(reverse('index'))
-            else:
-                # stop inactive accounts from logging in
-                return HttpResponse("Your Rango account is disabled")
-
-        # bad login credentials presented
-        else:
-            print("Invalid login details: {0}, {1}".format(username, password))
-            context_dict = {'error_message': 'Incorrect login credentials.'}
-            return render(request, 'rango/login.html', context_dict)
-
-    # method isn't POST, so display login form
-    else:
-        return render(request, 'rango/login.html', {})
-
-
 @login_required
 def restricted(request):
     return render(request, 'rango/restricted.html', {})
@@ -324,3 +220,19 @@ class MyRegistrationView(generic.FormView):
         new_user = authenticate(username=username, password=password)
         login(self.request, new_user)
         return super(MyRegistrationView, self).form_valid(form)
+
+
+def search(request):
+    result_list = []
+    form = SearchForm
+    context = {}
+
+    if request.method == 'POST':
+        query = request.POST['query'].strip()
+        if query:
+            result_list = run_query(query)
+
+    context['results_list'] = result_list
+    context['form'] = form
+
+    return render(request, 'rango/search.html', context)
