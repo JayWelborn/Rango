@@ -12,7 +12,19 @@
     {% crispy form form.helper %}
 </div>
 
+<div>
 {% if results_list %}
-<h1>IT WORKED!</h1>
+    <h3>Results:</h3>
+    <div class="list-group">
+    {% for result in results_list %}
+        <div class="list-group-item">
+            <h4 class="list-group-heading">
+                <a href="{{ result.link }}">{{ result.title }}</a>
+            </h4>
+            <p class="list-group-text">{{ result.summary }}</p>
+        </div>
+    {% endfor %}
+    </div>
 {% endif %}
+</div>
 {% endblock %}

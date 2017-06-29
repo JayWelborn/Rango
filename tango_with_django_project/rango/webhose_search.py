@@ -67,13 +67,10 @@ def run_query(search_terms, size=10):
         # into a Python Dictionary.
         response = urllib.request.urlopen(search_url).read().decode('utf-8')
         json_response = json.loads(response)
-        print(json.dumps(json_response,sort_keys=True, indent=4))
-
 
         # loop through json_response converting each json object into a 
         # dictionary and add it to the list of results
         for post in json_response['posts']:
-
             results.append({'title': post['title'],
                             'link': post['url'],
                             'summary': post['text'][:200]})
