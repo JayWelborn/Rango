@@ -106,6 +106,7 @@ def show_category(request, category_name_slug):
     """
 
     context_dict = {}
+    result_list = []
 
     try:
         """
@@ -119,10 +120,20 @@ def show_category(request, category_name_slug):
         # load context dictionary
         context_dict['pages'] = pages
         context_dict['category'] = category
+        context_dict['form'] = SearchForm
 
     except Category.DoesNotExist:
         context_dict['category'] = None
         context_dict['pages'] = None
+
+    # get search results if method is POST
+    if request.method == 'POST':
+        query = request.POST['query'].strip()
+        if query:
+            result_list = run_query(query)
+    
+    # add search results to context
+    context_dict['results_list'] = result_list
 
     return render(request, 'rango/category.html', context_dict)
 
