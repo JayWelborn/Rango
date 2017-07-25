@@ -35,5 +35,8 @@ urlpatterns = [
     url(r'^search/$',
         views.search,
         name='search'),
-    
+
+    url(r'^goto/',
+        views.track_url,
+        name = 'goto'),
 ]

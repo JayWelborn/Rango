@@ -3,7 +3,7 @@ from datetime import datetime
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views import generic
 
@@ -236,3 +236,19 @@ def search(request):
     context['form'] = form
 
     return render(request, 'rango/search.html', context)
+
+
+
+def track_url(request):
+    page_id = None
+    if request.method == 'GET':
+        if request.GET['page_id']:
+
+            # increments page's views
+            page = Page.objects.get(id=request.GET['page_id'])
+            page.views += 1
+            page.save()
+            # direct user to page clicked
+            return redirect(str(page.url))
+        else:
+            return reverse(index)
