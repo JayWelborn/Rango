@@ -58,7 +58,7 @@ class UserProfile(models.Model):
     """
 
     # https://docs.djangoproject.com/en/1.11/ref/contrib/auth/#django.contrib.auth.models.User
-    user = models.OneToOneField(User)
+    user = models.OneToOneField(User, related_name='user_profile')
     website = models.URLField(blank=True)
     picture = models.ImageField(upload_to='profile_images', blank=True)
 

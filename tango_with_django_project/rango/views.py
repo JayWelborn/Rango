@@ -2,9 +2,11 @@ from datetime import datetime
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
+from django.utils.decorators import method_decorator
 from django.views import generic
 
 from .models import Category, Page, UserProfile
@@ -249,7 +251,6 @@ def search(request):
     return render(request, 'rango/search.html', context)
 
 
-
 def track_url(request):
     page_id = None
     if request.method == 'GET':
@@ -263,3 +264,10 @@ def track_url(request):
             return redirect(str(page.url))
         else:
             return reverse(index)
+
+@method_decorator(login_required, name='dispatch')
+class ProfileView(generic.DetailView):
+    """docstring for ProfileView"""
+    model = UserProfile
+    template_name = 'rango/profile.html'
+    

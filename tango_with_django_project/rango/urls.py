@@ -39,4 +39,8 @@ urlpatterns = [
     url(r'^goto/',
         views.track_url,
         name = 'goto'),
+
+    url(r'^profile/(?P<pk>[0-9]+)$',
+        views.ProfileView.as_view(),
+        name='profile'),
 ]
