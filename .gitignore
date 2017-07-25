@@ -33,7 +33,7 @@ new-entry.css
 reference.html
 
 # local media files
-*/media/
+media/
 
 # app API keys
 *.key
