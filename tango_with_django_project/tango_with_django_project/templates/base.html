@@ -48,6 +48,12 @@
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'rango:profile' user.user_profile.pk %}">View Profile</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'rango:edit_profile' %}">Edit Profile</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'rango:list_users' %}">List Users</a>
+            </li>
           {% else %}
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'auth_login' %}">Login</a>

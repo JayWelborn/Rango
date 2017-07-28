@@ -3,6 +3,7 @@ from datetime import datetime
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.contrib.messages.views import SuccessMessageMixin
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
@@ -11,6 +12,7 @@ from django.views import generic
 
 from .models import Category, Page, UserProfile
 from .forms import CategoryForm, PageForm, RegistrationCrispyForm, SearchForm
+from .forms import UserProfileForm
 from .webhose_search import run_query
 
 
@@ -133,6 +135,8 @@ def show_category(request, category_name_slug):
         query = request.POST['query'].strip()
         if query:
             result_list = run_query(query)
+    else:
+        result_list = run_query(category.name)
     
     # add search results to context
     context_dict['results_list'] = result_list
@@ -270,4 +274,29 @@ class ProfileView(generic.DetailView):
     """docstring for ProfileView"""
     model = UserProfile
     template_name = 'rango/profile.html'
+
+
+@method_decorator(login_required, name='dispatch')
+class ProfileUpdateView(SuccessMessageMixin, generic.FormView):
+    """
+    Allow users to edit their profiles after creation.
+    Does not allow users to edit username or password.
+    """
+    template_name = 'rango/edit_profile.html'
+    form_class = UserProfileForm
+    success_url = '/rango/profile/edit'
+    success_message = 'User Profile Updated Successfuly!'
+
+    def form_valid(self, form):
+        form = form.save()
+        return super(ProfileUpdateView, self).form_valid(form)
     
+
+
+@method_decorator(login_required, name='dispatch')
+class ListUsers(generic.ListView):
+    """
+    View for showing all users
+    """
+    template_name = 'rango/list_users.html'
+    model = UserProfile

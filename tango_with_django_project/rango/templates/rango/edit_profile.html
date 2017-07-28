@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% load crispy_forms_tags %}
+
+{% block title_block %}
+Edit Profile
+{% endblock %}
+
+{% block content %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <h1>Current Profile</h1>
+    <h2>Website:</h2>
+    <a href="{{user.user_profile.website}}" target="blank">{{user.user_profile.website}}</a>
+    <h2>Picture:</h2>
+    <img style='max-width:100%; max-height: 50vh; display:block' 
+         src="{{ user.user_profile.picture.url }}" 
+         alt="{{ user.username }}">
+    
+    <h1>New Info</h1>
+
+    {% crispy form form.helper %}
+
+{% endblock %}
