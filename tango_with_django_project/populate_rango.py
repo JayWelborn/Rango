@@ -53,6 +53,30 @@ def populate():
         }
     ]
 
+    php_pages = [
+        {
+            "title": "PHP Manual",
+            "url": "http://php.net/manual/en/intro-whatis.php",
+            "views": 0
+        }
+    ]
+
+    perl_pages = [
+        {
+            "title": "Perl Foundation",
+            "url": "https://www.perl.org/",
+            "views": 12
+        }
+    ]
+
+    programming_pages = [
+        {
+            "title": "Python Foundation",
+            "url": "https://www.python.org",
+            "views": 128
+        }
+    ]
+
     other_pages = [
         {
             "title": "Bottle",
@@ -67,15 +91,36 @@ def populate():
     ]
 
     cats = {
-        "Python": {"pages": python_pages,
-                   "views": 128,
-                   "likes": 64},
-        "Django": {"pages": django_pages,
-                   "views": 64,
-                   "likes": 32},
-        "Other Frameworks": {"pages": other_pages,
-                             "views": 32,
-                             "likes": 16}
+        "Python": {
+            "pages": python_pages,
+            "views": 128,
+           "likes": 64
+        },
+        "Django": {
+            "pages": django_pages,
+            "views": 64,
+            "likes": 32
+        },
+        "Other Frameworks": {
+            "pages": other_pages,
+            "views": 32,
+            "likes": 16
+        },
+        "Perl": {
+            "pages": perl_pages,
+            "views": 8,
+            "likes": 2
+        },
+        "PHP": {
+            "pages": php_pages,
+            "views": 12,
+            "likes": 0
+        },
+        "Programming": {
+            "pages": programming_pages,
+            "views": 128,
+            "likes": 128
+        }
     }
 
     for cat, cat_data in cats.items():
