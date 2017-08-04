@@ -172,42 +172,6 @@ def add_category(request):
 
 
 @login_required
-def add_page(request, category_name_slug):
-    """
-    View for allong users to add pages.
-    PageForm defined in rango.forms.py
-    """
-
-    try:
-        category = Category.objects.get(slug=category_name_slug)
-
-    except Category.DoesNotExist:
-        category = None
-
-    form = PageForm()
-
-    # handles incoming data when form is posted
-    if request.method == 'POST':
-        form = PageForm(request.POST)
-
-        # saves model if form is valid
-        if form.is_valid():
-            if category:
-                page = form.save(commit=False)
-                page.category = category
-                page.views = 0
-                page.save()
-                return show_category(request, category_name_slug)
-
-        # print errors to terminal if form isn't valid
-        else:
-            print(form.errors)
-
-    context_dict = {'form': form, 'category': category}
-    return render(request, 'rango/add_page.html', context_dict)
-
-
-@login_required
 def restricted(request):
     return render(request, 'rango/restricted.html', {})
 
@@ -323,6 +287,31 @@ def like_category(request):
             cat.save()
 
     return HttpResponse(likes)
+
+
+@login_required
+def add_page(request):
+    """
+    Adds page to pages in category. Only accessible via AJAX call from
+    category page
+    """
+    cat_id = None
+    url = None
+    name = None
+    context = {}
+
+    if request.method == 'GET':
+        cat_id = request.GET['cat_id']
+        url = request.GET['url']
+        name = request.GET['name']
+
+    if cat_id:
+        cat = Category.objects.get(id=int(cat_id))
+        page = Page.objects.get_or_create(category=cat, title=name, url=url)
+        pages = Page.objects.filter(category=cat).order_by('-views')
+        context['pages'] = pages
+
+    return render(request, 'rango/page_list.html', context)
 
 
 def get_category_list(max_results=0, starts_with=''):

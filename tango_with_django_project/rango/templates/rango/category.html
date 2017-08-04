@@ -25,23 +25,25 @@
             {% endif %}
             <!-- end button -->
         </div>
-        {% if pages %}
-            <ul>
-                {% for page in pages %}
-                <li><a href="{% url 'rango:goto' %}?page_id={{ page.id }}" target="_blank">
-                    {{ page.title }}</a> views: {{ page.views }}
-                </li>
-                {% endfor %}
-            </ul>
-            {% else %}
-            <strong>No pages currently in category</strong>
-        {% endif %}
+        <div id="pages">
+            {% if pages %}
+                <ul>
+                    {% for page in pages %}
+                    <li><a href="{% url 'rango:goto' %}?page_id={{ page.id }}" target="_blank">
+                        {{ page.title }}</a> views: {{ page.views }}
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <strong>No pages currently in category</strong>
+            {% endif %}
+        </div>
         <!-- Display Search Form and link to add page if category exists and user is
              authenticated -->
         {% if user.is_authenticated %}
         
             {% crispy form form.helper %}
-            <a href="{% url 'rango:add_page' category.slug %}">Add Page</a>
+            
             <!-- List of Search Results -->
             {% if results_list %}
                 <h3>Results:</h3>
@@ -52,6 +54,14 @@
                             <a href="{{ result.link }}">{{ result.title }}</a>
                         </h4>
                         <p class="list-group-text">{{ result.summary }}</p>
+                        <button data-name="{{ result.title }}"
+                                data-url="{{ result.link }}"
+                                data-catid="{{ category.id }}" 
+                                class="btn btn-primary btn-sm add_page" 
+                                type="button">
+                            Add Page to Rango
+                        </button>
+                        <div class="page_added"></div>
                     </div>
                 {% endfor %}
                 </div>
