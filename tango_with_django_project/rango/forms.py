@@ -152,9 +152,9 @@ class RegistrationCrispyForm(CrispyForm):
         Creates and saves new UserProfile object with website and picture
         """
         user = User.objects.create(
-                username=self.cleaned_data['username'],
-                email=self.cleaned_data['email'],
-            )
+            username=self.cleaned_data['username'],
+            email=self.cleaned_data['email'],
+        )
 
         password = self.cleaned_data['password']
         password_confirmation = self.cleaned_data['confirm_password']

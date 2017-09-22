@@ -25,10 +25,13 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^accounts/register/$',
         views.MyRegistrationView.as_view(),
-        name = 'registration_register'),
+        name='registration_register'),
     url(r'^accounts/', include('registration.backends.simple.urls')),
     url(r'^$', views.index, name='index')
 ]
 
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(
+        settings.MEDIA_URL,
+        document_root=settings.MEDIA_ROOT
+    )

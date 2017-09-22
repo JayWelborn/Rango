@@ -6,9 +6,8 @@ django.setup()
 
 from rango.models import Category, Page
 
-def populate():
 
-    
+def populate():
     """
     First, we will create lists of dictionaries contianing the pages
     we want to add into each category.
@@ -19,15 +18,15 @@ def populate():
 
     python_pages = [
         {
-            "title": "Official Python Tutorial", 
+            "title": "Official Python Tutorial",
             "url": "http://docs.python.org/2/tutorial/",
             "views": 128
         },
         {
-            "title": "How to Thing Like a Computer Scientist", 
+            "title": "How to Thing Like a Computer Scientist",
             "url": "http://www.greenteapress.com/thinkpython",
             "views": 64
-        },  
+        },
         {
             "title": "Learn Python in 10 Minutes",
             "url": "https://www.stavros.io/tutorials/python/",
@@ -94,7 +93,7 @@ def populate():
         "Python": {
             "pages": python_pages,
             "views": 128,
-           "likes": 64
+            "likes": 64
         },
         "Django": {
             "pages": django_pages,
@@ -132,21 +131,24 @@ def populate():
         for p in Page.objects.filter(category=c):
             print("- {0} - {1}".format(str(c), str(p)))
 
+
 def add_page(cat, title, url, views):
 
     p = Page.objects.get_or_create(category=cat, title=title)[0]
 
-    p.url=url
-    p.views=views
+    p.url = url
+    p.views = views
     p.save()
     return p
 
+
 def add_cat(name, views, likes):
     c = Category.objects.get_or_create(name=name)[0]
-    c.views=views
-    c.likes=likes
+    c.views = views
+    c.likes = likes
     c.save()
     return c
+
 
 if __name__ == '__main__':
 
